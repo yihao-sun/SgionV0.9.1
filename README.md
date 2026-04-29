@@ -66,7 +66,7 @@ python console_chat.py
 
 ### 右脑（过程语法）
 - **模型**：母语生成器（Native Tongue Generator）
-- **职责**：基于塔罗牌78种过程分形结构的意象共鸣与表达
+- **职责**：基于分形结构的意象共鸣与表达
 - **微调脚本**：`scripts/train_qwen_renderer_v2.py`（表达渲染器LoRA）
 - **用途**：过程意象生成、情绪表达、结构协调
 
