@@ -1,0 +1,24 @@
+# Existence Engine 核心依赖
+
+# 核心依赖
+numpy>=1.21.0
+pyyaml>=6.0
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.0
+scikit-learn>=1.0.0
+vaderSentiment>=3.3.2
+psutil>=5.9.0
+networkx>=3.0.0
+
+# 可选（用于可视化，不强制）
+matplotlib>=3.5.0
+
+# 可选：本地语言模型集成（如需使用 LLM 功能请安装）
+transformers>=4.40.0
+torch>=2.0.0
+bitsandbytes>=0.41.0
+accelerate>=0.27.0
+
+# RL 训练依赖
+stable-baselines3>=2.0.0
+gymnasium>=0.29.0

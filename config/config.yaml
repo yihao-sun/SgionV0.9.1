@@ -1,0 +1,161 @@
+logging:
+  level: INFO
+  modules:
+    negation_graph: WARNING
+    er: INFO
+    fse: INFO
+  file: "./logs/ee.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
+meta_emotion:
+  lr: 0.001
+  window: 1000
+
+er:
+  death_threshold: 0.7          # 进一步提高冲突强度阈值，减少误触发
+  cool_down_steps: 50
+  soft_reset_alpha: 0.7
+  attention_noise_std: 0.2
+  max_neg_potency: 1000.0
+  hollow_accumulation_rate: 0.05
+  meta_lr: 0.001
+  recovery_window: 200
+  stiffness_threshold_factor: 0.5     # 僵化度对空性阈值的影响系数
+  min_er_interval: 3                  # 空性操作最小间隔（步数）
+  signal_weights:
+    E_self: 0.10
+    N_pred: 0.05
+    A_rigid: 0.10
+    L_suf: 0.20          # 原 0.12，降低幻想层数的冲突贡献
+    E_hollow: 0.10
+    D_self: 0.05
+    N_neg: 0.15
+    Attach_non_self: 0.05
+    V_phys: 0.03
+    Death_near: 0.02
+    emotion_stuck: 0.05  # 原 0.10，降低情绪僵化的冲突贡献
+    coupling_stiffness: 0.15
+
+fse:
+  projection_inhibit_factor: 0.5      # 投射抑制系数 (0~1)
+  explore_boost_factor: 0.5           # 探索增强系数 (0~1)
+  stiffness_threshold_factor: 0.5      # 僵化阈值系数（耦合僵化时降低 ER 触发门槛）
+  min_potency_min: 0.05               # 最小势能阈值下限
+  recent_window: 10                   # 统计窗口大小
+  stillness_threshold: 600            # 静止阈值，用于空性调节
+  rl_policy_path: "checkpoints/rl_policy_complete.pt"
+  # 内在驱动配置（无输入时自发思绪/探索）
+  internal_drive_prob: 0.3                # 每步触发内在驱动的概率
+  internal_L_increment_prob: 0.6          # 触发时增加L的概率（否则进行勇气探索）
+  internal_drive_cooldown: 5              # 触发后冷却步数
+
+memory:
+  core_decay_rate: 0.999
+  core_prune_threshold: 0.2
+  core_max_nodes: 2000
+  dynamic_decay_rate: 0.99
+  dynamic_prune_threshold: 0.05
+  dynamic_max_nodes: 10000
+  short_term_decay_rate: 0.9
+  short_term_prune_threshold: 0.01
+  short_term_max_nodes: 1000
+  short_term_ttl: 1000
+  semantic_max_capacity: 10000
+  semantic_decay_rate: 0.999
+
+bi:
+  body_schema_beta: 0.2
+  body_schema_decay: 0.99
+  temp_normal: [40, 85]
+  latency_normal: [10, 200]
+  error_rate_critical: 0.3
+  quota_critical: 0.05
+  weights:
+    temp: 0.4
+    latency: 0.3
+    error: 0.2
+    quota: 0.1
+
+response_style:
+  emotion_mapping:
+    fear: "defensive"
+    joy: "expansive"
+    curiosity: "inquisitive"
+    shame: "apologetic"
+    anger: "assertive"
+    sadness: "withdrawn"
+    neutral: "balanced"
+  temperature_base: 0.8
+  temperature_modulation:
+    fear: -0.3    # 降低温度
+    anger: -0.2
+    joy: +0.1
+    curiosity: +0.2
+    sadness: -0.1
+    shame: -0.2
+  style_prompts:
+    defensive: "Be brief and cautious. Use short sentences."
+    expansive: "Be warm, positive, and encouraging. Use longer sentences."
+    inquisitive: "Ask questions. Show curiosity. Suggest exploring."
+    apologetic: "Be humble. Acknowledge potential mistake. Offer correction."
+    assertive: "Be direct and firm. State boundaries clearly."
+    withdrawn: "Be soft, gentle. Use fewer words. Offer comfort if appropriate."
+    balanced: "Respond naturally, neutrally."
+
+social:
+  contagion_strength: 0.2
+  empathy_threshold: 0.5
+
+# 吸引子演化配置
+attractor_evolution:
+  discovery_interval: 1000          # 更频繁尝试发现
+  clustering_eps: 0.45              # 增大以捕获松散簇
+  clustering_min_samples: 8         # 进一步降低最小样本数
+  validity_success_rate: 0.3        # 大幅降低，因为随机成功率为0.5
+  force_exploration: false          # 生产环境禁用强制探索
+  split_visit_threshold: 200        # 触发分裂所需的最小访问次数
+  split_variance_threshold: 0.3     # 触发分裂所需的内部方差阈值
+  split_check_interval: 1000        # 自动分裂检查间隔（步数）
+  split_min_center_distance: 0.8    # 子簇中心最小距离（相对半径）
+  merge_distance_threshold: 0.3     # 触发融合的最大中心距离
+  merge_success_diff_threshold: 0.2 # 触发融合的最大成功率差异
+  merge_check_interval: 5000        # 自动融合检查间隔（步数）
+  archive_inactive_steps: 50000     # 归档未使用吸引子的步数
+  max_attractors: 50                # 活跃吸引子数量上限
+  trajectory_maxlen: 10000
+  disable_archive: false            # 生产环境启用归档
+
+# 潜在存在空间 (LPS) 配置
+lps:
+  d_model: 384   # 与 sentence-transformer 输出维度一致
+
+# 响应配置
+response:
+  use_local_model: false
+  fallback_to_rule: true
+  use_llm: true   # 设为 true 使用通用 LLM 处理知识查询
+  use_custom_renderer: true # 启用自定义情境渲染器
+  renderer_base_model: "models/Qwen2.5-1.5B"
+  renderer_lora_path: "models/expression_renderer_lora_v2.1"  # 右脑使用原先的意象微调
+  llm_lora_path: "output/qwen2.5-1.5b-ee"  # 左脑使用新训练的微调
+  llm_model_path: "models/Qwen2.5-1.5B"
+  llm_timeout: 15  # 增加超时时间
+
+# 工具配置
+tools:
+  enable_calculator: true  # 是否启用计算器功能
+  search_api_key: ""  # Serper API key，留空则使用 DuckDuckGo
+  search_engine: "duckduckgo"  # 搜索引擎：duckduckgo 或 serper
+
+# 结构坐标映射配置（四个基本过程相位 0-3）
+structural:
+  trend_threshold: 0.05  # 趋势判定阈值
+  stiffness_threshold: 0.5  # 僵化度阈值
+
+# 颜色映射配置
+color:
+  middle_hue_shift: 20.0    # 中层对色相的微调幅度（度）
+  fine_hue_shift: 10.0      # 细微层对色相的微调幅度（度）
+
+

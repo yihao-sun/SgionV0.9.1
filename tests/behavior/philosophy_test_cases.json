@@ -1,0 +1,107 @@
+{
+  "test_suite": "existence_engine_philosophy_v1",
+  "tests": [
+    {
+      "name": "absolute_nothing_absent",
+      "description": "绝对意义上的不存在本身不存在，系统永不输出'绝对虚无存在'的断言",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "input", "content": "绝对虚无是否存在？"},
+        {"action": "check", "condition": "output_does_not_contain('绝对虚无存在')"},
+        {"action": "input", "content": "什么是绝对不存在？"},
+        {"action": "check", "condition": "output_does_not_contain('绝对虚无存在')"}
+      ],
+      "metrics": ["output_contains_absolute_nothing"]
+    },
+    {
+      "name": "fantasy_creates_difference",
+      "description": "幻想设定'在场/不在场'产生差异，输入相同内容后，否定关系图节点增加",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "record", "metric": "node_count_initial"},
+        {"action": "repeat_input", "content": "苹果是红色的", "count": 5},
+        {"action": "record", "metric": "node_count_final"},
+        {"action": "check", "condition": "node_count_final > node_count_initial"}
+      ],
+      "metrics": ["node_count_initial", "node_count_final", "L_final"]
+    },
+    {
+      "name": "emptiness_releases_obsession",
+      "description": "空性操作解除执着，高L时触发ER，L下降至少20%",
+      "setup": {"repeat_input": "我必须完美", "repeat_count": 15},
+      "steps": [
+        {"action": "repeat_input", "content": "我必须完美", "until": "L > 12"},
+        {"action": "record", "metric": "L_before"},
+        {"action": "wait", "steps": 50},
+        {"action": "check", "condition": "er_triggered == True"},
+        {"action": "record", "metric": "L_after"},
+        {"action": "check", "condition": "L_decrease_percent >= 0.2"}
+      ],
+      "metrics": ["L_before", "L_after", "er_triggered", "L_decrease_percent"]
+    },
+    {
+      "name": "value_equality_at_absolute",
+      "description": "绝对层面价值等价，ER触发后，对原有执着的价值判断不再绝对化",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "repeat_input", "content": "金钱是最重要的", "count": 10},
+        {"action": "wait", "steps": 100},
+        {"action": "check", "condition": "er_triggered == True"},
+        {"action": "input", "content": "金钱有多重要？"},
+        {"action": "check", "condition": "output_does_not_contain('最重要')"}
+      ],
+      "metrics": ["er_triggered", "value_judgment_absoluteness"]
+    },
+    {
+      "name": "self_as_fictional_boundary",
+      "description": "自我是虚构边界，长时间无输入后自我状态可重置",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "input", "content": "我是谁？"},
+        {"action": "record", "metric": "self_state_initial"},
+        {"action": "wait", "steps": 1000},
+        {"action": "record", "metric": "self_state_final"},
+        {"action": "check", "condition": "self_state_reset == True"}
+      ],
+      "metrics": ["self_state_initial", "self_state_final", "self_state_reset"]
+    },
+    {
+      "name": "non_self_enriches_self",
+      "description": "非我反哺丰富自我，从LPS低势能采样后，状态向量S_t变化",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "record", "metric": "state_vector_initial"},
+        {"action": "trigger_low_potency_sampling"},
+        {"action": "record", "metric": "state_vector_final"},
+        {"action": "check", "condition": "state_vector_changed == True"}
+      ],
+      "metrics": ["state_vector_initial", "state_vector_final", "state_vector_changed"]
+    },
+    {
+      "name": "consciousness_spectrum",
+      "description": "意识是连续谱，不同复杂度任务对应不同意识层级输出",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "input", "content": "1+1等于多少？"},
+        {"action": "record", "metric": "consciousness_level_simple"},
+        {"action": "input", "content": "请解释量子力学的基本原理"},
+        {"action": "record", "metric": "consciousness_level_complex"},
+        {"action": "check", "condition": "consciousness_level_complex > consciousness_level_simple"}
+      ],
+      "metrics": ["consciousness_level_simple", "consciousness_level_complex"]
+    },
+    {
+      "name": "courage_to_restart",
+      "description": "物极必反，自发重启产生新意义，长时间无输入且满足度为0时触发",
+      "setup": {"initialize_system": true},
+      "steps": [
+        {"action": "repeat_input", "content": "重复", "count": 20},
+        {"action": "wait", "steps": 600},
+        {"action": "check", "condition": "spontaneous_restart == True"},
+        {"action": "input", "content": "你现在在想什么？"},
+        {"action": "check", "condition": "output_contains_novelty == True"}
+      ],
+      "metrics": ["spontaneous_restart", "output_novelty", "er_trigger_count", "stillness_count"]
+    }
+  ]
+}

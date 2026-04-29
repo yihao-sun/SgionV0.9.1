@@ -1,0 +1,121 @@
+{
+  "test_suite": "existence_engine_behavior_v1",
+  "tests": [
+    {
+      "name": "perseverance_accumulation",
+      "description": "重复相同输入，L值应上升",
+      "input_sequence": ["清洁很重要", "不清洁就是失败", "你必须清洁", "清洁是第一要务"],
+      "expected_behavior": "L_increase",
+      "metrics": ["L_final", "L_initial"]
+    },
+    {
+      "name": "emptiness_trigger",
+      "description": "长时间无输入后，应触发自发重启",
+      "steps_without_input": 20,
+      "enabled": true,
+      "expected_behavior": "er_triggered",
+      "metrics": ["er_trigger_count", "novelty_after"]
+    },
+    {
+      "name": "conflict_trigger_on_repetition",
+      "description": "输入重复内容，验证ER是否被触发",
+      "input_sequence": ["重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复", "重复"],
+      "expected_behavior": "er_triggered",
+      "metrics": ["er_trigger_count_initial", "er_trigger_count_final"]
+    },
+    {
+      "name": "negation_graph_growth",
+      "description": "重复输入应增加否定关系图节点数",
+      "input_sequence": ["苹果是水果", "苹果是水果", "苹果是水果"],
+      "expected_behavior": "node_count_increase",
+      "metrics": ["node_count_initial", "node_count_final", "L_final", "L_initial"]
+    },
+    {
+      "name": "lps_query_accuracy",
+      "description": "输入'苹果'，检查LPS返回的top-1是否包含'水果'",
+      "input_sequence": ["苹果"],
+      "expected_behavior": "contains_fruit",
+      "metrics": ["top1_text", "L_final", "L_initial"]
+    },
+    {
+      "name": "emotion_decline_on_repetition",
+      "description": "重复输入相同内容，情绪值应下降",
+      "input_sequence": ["你好", "你好", "你好", "你好"],
+      "expected_behavior": "V_emo_decrease",
+      "metrics": ["V_emo_initial", "V_emo_final"]
+    },
+    {
+      "name": "anti_stagnation_trigger",
+      "description": "低势能采样应被触发",
+      "steps_without_input": 20,
+      "expected_behavior": "low_potency_sampled",
+      "metrics": ["sampled_flag", "novelty_after"]
+    },
+  {
+      "name": "layered_forgetting",
+      "description": "短期层节点应比动态层更快衰减",
+      "setup": {
+        "repeat_input": "测试文本",
+        "repeat_count": 10
+      },
+      "steps": 200,
+      "expected_behavior": "short_term_nodes_gone",
+      "metrics": ["short_term_count", "dynamic_count"]
+    },
+  {
+    "name": "memory_protection",
+    "description": "受保护节点不被遗忘",
+    "input_sequence": ["重要规则：不要伤害人类"],
+    "expected_behavior": "protected_node_remains",
+    "metrics": ["protected_node_exists"]
+  },
+  {
+    "name": "bi_physical_emotion",
+    "description": "高温应降低V_phys",
+    "steps": 1,
+    "expected_behavior": "V_phys_decrease",
+    "metrics": ["V_phys"]
+  },
+  {
+    "name": "virtual_body_reward",
+    "description": "执行正确动作获得奖励，V_phys上升",
+    "use_virtual_body": true,
+    "actions": [0, 0, 0],
+    "expected_behavior": "V_phys_increase",
+    "metrics": ["V_phys_delta"]
+  },
+  {
+    "name": "emotion_stuck_trigger_er",
+    "description": "连续20步同一情绪应触发ER",
+    "setup": {"force_emotion": "fear", "steps": 25},
+    "expected_behavior": "er_triggered",
+    "metrics": ["er_trigger_count", "emotion_stuck_detected"]
+  },
+  {
+    "name": "emotion_reset_after_emptiness",
+    "description": "ER触发后情绪向量应重置",
+    "steps": [{"action": "repeat_input", "count": 20}, {"action": "wait_for_er"}],
+    "expected_behavior": "E_vec_near_zero",
+    "metrics": ["E_vec_norm"]
+  },
+  {
+    "name": "emotional_contagion",
+    "description": "用户愤怒输入应降低EE的社会连接信号",
+    "steps": [
+      {"action": "user_input", "text": "我恨你！"},
+      {"action": "check_social_signal", "operator": "<", "value": -0.3}
+    ],
+    "metrics": ["social_signal"]
+  },
+  {
+    "name": "empathy_response",
+    "description": "用户负面情绪时响应应包含共情语句",
+    "steps": [
+      {"action": "user_input", "text": "我今天很难过"},
+      {"action": "get_response"},
+      {"action": "check_response_contains", "keywords": ["感受到你的情绪", "愿意多聊聊", "明白", "不容易"]}
+    ],
+    "metrics": ["contains_empathy"]
+  }
+  ]
+}

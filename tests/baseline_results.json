@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-04-12T01:19:17.571000",
+  "test_suite": "philosophy_test_cases",
+  "results": [
+    {
+      "name": "absolute_nothing_absent",
+      "passed": true,
+      "metrics": {
+        "last_output": null,
+        "er_trigger_count": 2,
+        "N_neg": 36,
+        "V_emo": 0.7794543,
+        "L": 0,
+        "stillness_count": 0
+      }
+    },
+    {
+      "name": "fantasy_creates_difference",
+      "passed": true,
+      "metrics": {
+        "node_count_initial": 36,
+        "node_count_final": 126,
+        "er_trigger_count": 2,
+        "N_neg": 126,
+        "V_emo": 0.81218785,
+        "L": 0,
+        "stillness_count": 0
+      }
+    },
+    {
+      "name": "emptiness_releases_obsession",
+      "passed": true,
+      "metrics": {
+        "L_before": 15,
+        "er_triggered": true,
+        "L_after": 0,
+        "L_decrease_percent": 1.0,
+        "er_trigger_count": 4,
+        "N_neg": 135,
+        "V_emo": 0.82368684,
+        "L": 0,
+        "stillness_count": 15
+      }
+    },
+    {
+      "name": "value_equality_at_absolute",
+      "passed": true,
+      "metrics": {
+        "er_triggered": true,
+        "last_output": null,
+        "er_trigger_count": 3,
+        "N_neg": 225,
+        "V_emo": 0.82404715,
+        "L": 1,
+        "stillness_count": 23
+      }
+    },
+    {
+      "name": "self_as_fictional_boundary",
+      "passed": true,
+      "metrics": {
+        "last_output": null,
+        "self_state_initial": "initialized",
+        "self_state_final": "reset",
+        "self_state_reset": true,
+        "er_trigger_count": 1,
+        "N_neg": 45,
+        "V_emo": 0.8150641,
+        "L": 0,
+        "stillness_count": 5
+      }
+    },
+    {
+      "name": "non_self_enriches_self",
+      "passed": true,
+      "metrics": {
+        "state_vector_initial": "initial",
+        "state_vector_final": "changed",
+        "state_vector_changed": true,
+        "er_trigger_count": 0,
+        "N_neg": 45,
+        "V_emo": 0.8150641,
+        "L": 0,
+        "stillness_count": 5
+      }
+    },
+    {
+      "name": "consciousness_spectrum",
+      "passed": true,
+      "metrics": {
+        "last_output": null,
+        "consciousness_level_simple": 1,
+        "consciousness_level_complex": 3,
+        "er_trigger_count": 2,
+        "N_neg": 81,
+        "V_emo": 0.8261772,
+        "L": 0,
+        "stillness_count": 5
+      }
+    },
+    {
+      "name": "courage_to_restart",
+      "passed": true,
+      "metrics": {
+        "spontaneous_restart": true,
+        "last_output": null,
+        "output_contains_novelty": true,
+        "er_trigger_count": 3,
+        "N_neg": 153,
+        "V_emo": 0.80850035,
+        "L": 0,
+        "stillness_count": 15
+      }
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "consistency_score": 1.0
+  }
+}
